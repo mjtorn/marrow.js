@@ -1,9 +1,10 @@
 fs = require 'fs'
 
 window.Marrow = class Marrow
-  constructor: (@tmplStr) ->
+  constructor: (@tmplPath) ->
     @domParse = new window.DOMParser()
     @tmpl = null
+    !!@tmplPath and @loadFile @tmplPath
 
   loadFile: (tmplPath, enc='utf-8') ->
     @tmplStr = fs.readFileSync tmplPath, enc
