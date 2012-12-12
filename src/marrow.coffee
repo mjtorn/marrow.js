@@ -55,7 +55,7 @@ window.Marrow = class Marrow
       attrs = elem.attributes
       for attr in attrs
         if attr.name.search('data-') == 0
-          @handle elem, attr.name.split('-')[1..]..., attr.value
+          @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
 
     return @tmplStr
 
@@ -64,21 +64,22 @@ window.Marrow = class Marrow
   ###
 
   cmdDict: {
-    'bind': (target, vals) ->
-      val = vals[0]
-      target.innerHtml = val
+    'bind': (ctx, target, args) ->
+      key = args[0]
+      target.innerHtml = ctx[key]
   }
 
   # FIXME: This does not nest
   handle: ->
     argc = arguments.length
-    if argc < 3
+    if argc < 4
       throw Error 'Need command, at least one argument and target element', arguments
     argv = Array.prototype.slice.call arguments
 
-    target = argv[0]
-    cmd = argv[1]
-    args = argv[2..argc - 1]
+    ctx = argv[0]
+    target = argv[1]
+    cmd = argv[2]
+    args = argv[3..argc - 1]
 
-    @cmdDict[cmd] target, args
+    @cmdDict[cmd] ctx, target, args
 
