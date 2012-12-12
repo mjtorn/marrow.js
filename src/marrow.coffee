@@ -5,7 +5,7 @@ window.Marrow = class Marrow
   # Constructor takes an fs path for now. Probably the html string later
   ###
   constructor: (@tmplStr) ->
-    @domParse = new window.DOMParser()
+    @domParser = new window.DOMParser()
     @tmpl = null
 
   ###
@@ -25,7 +25,7 @@ window.Marrow = class Marrow
   parse: ->
     !@tmplStr and throw Error('Need template to parse')
 
-    @tmpl = @domParse.parseFromString @tmplStr, 'application/xml'
+    @tmpl = @domParser.parseFromString @tmplStr, 'application/xml'
 
   ###
   # Debugging
