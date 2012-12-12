@@ -15,6 +15,11 @@ window.Marrow = class Marrow
     @tmplStr = fs.readFileSync tmplPath, enc
 
   ###
+  # Or str
+  ###
+  loadStr: (@tmplStr) ->
+
+  ###
   # Create a DOM object of the internal template string
   ###
   parse: ->
