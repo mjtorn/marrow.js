@@ -25,4 +25,9 @@ test 'Simple template, dump contents', ->
   @mrw.dumpDom()
   ok 1
 
+test 'Simple template, render', ->
+  # .render() calls parse()
+  html = @mrw.render 'name': 'mjtorn'
+  notEqual @mrw.tmpl, 'Parsed marrow should have template object'
+  notEqual html.search('mjtorn'), -1, 'Rendered context should appear'
 
