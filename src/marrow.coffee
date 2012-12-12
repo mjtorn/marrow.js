@@ -43,3 +43,42 @@ window.Marrow = class Marrow
       @dumpDom node, cb, depth
       node = node.nextSibling
 
+  ###
+  # Return a rendered string
+  ###
+  render: (ctx, tmplStr) ->
+    !@tmplStr and @loadStr tmplStr
+    @parse()
+
+    elems = @tmpl.getElementsByTagName('*')
+    for elem in elems
+      attrs = elem.attributes
+      for attr in attrs
+        if attr.name.search('data-') == 0
+          @handle elem, attr.name.split('-')[1..]..., attr.value
+
+    return @tmplStr
+
+  ###
+  # JFDI
+  ###
+
+  cmdDict: {
+    'bind': (target, vals) ->
+      val = vals[0]
+      target.innerHtml = val
+  }
+
+  # FIXME: This does not nest
+  handle: ->
+    argc = arguments.length
+    if argc < 3
+      throw Error 'Need command, at least one argument and target element', arguments
+    argv = Array.prototype.slice.call arguments
+
+    target = argv[0]
+    cmd = argv[1]
+    args = argv[2..argc - 1]
+
+    @cmdDict[cmd] target, args
+
