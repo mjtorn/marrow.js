@@ -4,10 +4,9 @@ window.Marrow = class Marrow
   ###
   # Constructor takes an fs path for now. Probably the html string later
   ###
-  constructor: (@tmplPath) ->
+  constructor: (@tmplStr) ->
     @domParse = new window.DOMParser()
     @tmpl = null
-    !!@tmplPath and @loadFile @tmplPath
 
   ###
   ## Load a given file from the fs
