@@ -11,6 +11,9 @@ if !window.DOMParser
     parseFromString: (s, mimeType) ->
       jsdom.jsdom(s)
 
+if !window.XMLSerializer
+  xmlshim = require '../../env/node_modules/xmlshim'
+  window.XMLSerializer = xmlshim.XMLSerializer
 
 tests = glob.sync '*test*coffee'
 suite = (path.resolve(test) for test in tests)
