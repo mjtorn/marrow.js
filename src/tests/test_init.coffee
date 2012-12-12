@@ -1,9 +1,13 @@
+fs = require 'fs'
+
 marrow = require '../marrow'
 
 QUnit.module 'Setup',
   setup: ->
     @emptyMrw = new window.Marrow()
-    @mrw = new window.Marrow('templates/simple.html')
+
+    @tmplStr = fs.readFileSync 'templates/simple.html', 'utf-8'
+    @mrw = new window.Marrow(@tmplStr)
 
 test 'Simple template, read', ->
   ok !@emptyMrw.tmplStr, 'Without constructor it whould be empty'
