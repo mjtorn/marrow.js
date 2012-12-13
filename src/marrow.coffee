@@ -6,6 +6,7 @@ window.Marrow = class Marrow
   ###
   constructor: (@tmplStr) ->
     @domParser = new window.DOMParser()
+    @xmlSerializer = new window.XMLSerializer()
     @tmpl = null
 
   ###
@@ -57,7 +58,7 @@ window.Marrow = class Marrow
         if attr.name.search('data-') == 0
           @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
 
-    return @tmplStr
+    return @xmlSerializer.serializeToString @tmpl
 
   ###
   # JFDI
