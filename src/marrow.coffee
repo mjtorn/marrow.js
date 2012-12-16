@@ -21,6 +21,12 @@ window.Marrow = class Marrow
   loadStr: (@tmplStr) ->
 
   ###
+  # Or dom
+  ###
+  loadDom: (domElement) ->
+      @tmplStr = @xmlSerializer.serializeToString domElement
+
+  ###
   # Create a DOM object of the internal template string
   ###
   parse: ->
