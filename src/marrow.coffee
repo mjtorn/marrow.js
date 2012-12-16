@@ -68,13 +68,13 @@ window.Marrow = class Marrow
       return @serialize()
 
   ###
-  # Test wrapper for setting innerHtml
+  # Test wrapper for setting innerHTML
   ###
   setHtml: (newHtml, tmplStr) ->
     !@tmplStr and @loadStr tmplStr
     @parse()
     
-    @tmpl.innerHtml = newHtml
+    @tmpl.innerHTML = newHtml
     @tmpl
 
   ###
@@ -92,7 +92,7 @@ window.Marrow = class Marrow
   cmdDict: {
     'bind': (ctx, target, args) ->
       key = args[0]
-      target.innerHtml = ctx[key]
+      target.innerHTML = ctx[key]
   }
 
   # FIXME: This does not nest
