@@ -12,7 +12,9 @@
             mrw = new Marrow();
             target = document.getElementById('marrow-test');
             mrw.loadDom(target);
-            target.innerHTML = mrw.render({'name':'foo'});
+            rendered = mrw.render({'name':'foo'});
+            target.parentNode.replaceChild(mrw.tmpl.childNodes[0], target);
+            //target.outerHTML = rendered;
         </script>
     </body>
 </html>
