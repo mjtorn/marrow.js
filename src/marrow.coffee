@@ -1,5 +1,3 @@
-fs = require 'fs'
-
 window.Marrow = class Marrow
   ###
   # Constructor takes an fs path for now. Probably the html string later
@@ -13,6 +11,8 @@ window.Marrow = class Marrow
   ## Load a given file from the fs
   ###
   loadFile: (tmplPath, enc='utf-8') ->
+    fs = require 'fs'
+
     @tmplStr = fs.readFileSync tmplPath, enc
 
   ###
