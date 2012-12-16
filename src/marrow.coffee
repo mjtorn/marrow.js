@@ -53,18 +53,18 @@ window.Marrow = class Marrow
   ###
   # Return a rendered string
   ###
-  render: (ctx) ->
-    !@tmplStr and throw Error 'Load a template before rendering'
-
-    elems = @tmpl.getElementsByTagName('*')
-    for elem in elems
-      attrs = elem.attributes
-      for attr in attrs
-        if attr.name.search('data-') == 0
-          @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
-
+  renderString: (ctx) ->
+    @_render ctx
     if @tmpl?
       return @serialize()
+
+  ###
+  # Render to target element
+  ###
+  render: (ctx, target) ->
+    @_render ctx
+    if @tmpl?
+      target.parentNode.replaceChild(@tmpl.childNodes[0], target)
 
   ###
   # Test wrapper for setting innerHTML
@@ -107,4 +107,17 @@ window.Marrow = class Marrow
     args = argv[3..argc - 1]
 
     @cmdDict[cmd] ctx, target, args
+
+  # What actually renders
+  _render: (ctx) ->
+    !@tmplStr and throw Error 'Load a template before rendering'
+    !@tmpl and @parse()
+
+    elems = @tmpl.getElementsByTagName('*')
+    for elem in elems
+      attrs = elem.attributes
+      for attr in attrs
+        if attr.name.search('data-') == 0
+          @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
+
 
