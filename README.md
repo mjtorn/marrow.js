@@ -3,9 +3,8 @@
 Template engine, mostly to be used with http://spinejs.com/
 
 ## Overview
-Creates template objects ("marrow objects") out of html and renders a context unto them.
-
-The rendered string is returned by the render method.
+Creates template objects ("marrow objects") out of html and with a context
+on them renders into a string or replacing DOM element.
 
 ## Requirements
  * coffee-script
@@ -16,6 +15,7 @@ The rendered string is returned by the render method.
    * libxmljs
 
 ## TODO
+ * Fix the failing test
  * Further testing.
  * Nesting data-binds
  * More commands
