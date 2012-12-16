@@ -64,6 +64,25 @@ window.Marrow = class Marrow
         if attr.name.search('data-') == 0
           @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
 
+    if @tmpl?
+      return @serialize()
+
+  ###
+  # Test wrapper for setting innerHtml
+  ###
+  setHtml: (newHtml, tmplStr) ->
+    !@tmplStr and @loadStr tmplStr
+    @parse()
+    
+    @tmpl.innerHtml = newHtml
+    @tmpl
+
+  ###
+  # Convenience to get string output
+  ###
+  serialize: ->
+    !@tmpl and throw Error 'load and parse something first'
+
     return @xmlSerializer.serializeToString @tmpl
 
   ###
