@@ -64,7 +64,15 @@ window.Marrow = class Marrow
   # Render to target element
   ###
   render: (ctx, target) ->
+    if typeof target == 'string'
+      target = document.getElementById target
+      if not target
+        throw Error 'Need a destination element or id string'
+
+      @loadDom target
+
     @_render ctx
+
     if @tmpl?
       target.parentNode.replaceChild(@tmpl.childNodes[0], target)
 
