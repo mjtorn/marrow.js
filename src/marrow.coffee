@@ -53,9 +53,8 @@ window.Marrow = class Marrow
   ###
   # Return a rendered string
   ###
-  render: (ctx, tmplStr) ->
-    !@tmplStr and @loadStr tmplStr
-    @parse()
+  render: (ctx) ->
+    !@tmplStr and throw Error 'Load a template before rendering'
 
     elems = @tmpl.getElementsByTagName('*')
     for elem in elems
