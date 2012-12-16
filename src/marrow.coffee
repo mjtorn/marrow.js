@@ -33,6 +33,8 @@ window.Marrow = class Marrow
     !@tmplStr and throw Error('Need template to parse')
 
     @tmpl = @domParser.parseFromString @tmplStr, 'application/xml'
+    if @tmpl.childNodes.length > 1
+      raise Error 'Do not know yet how to deal with multi-element templates'
 
   ###
   # Debugging
