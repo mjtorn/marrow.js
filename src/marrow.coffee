@@ -8,7 +8,7 @@ window.Marrow = class Marrow
     @tmpl = null
 
   ###
-  ## Load a given file from the fs
+  # Load a given file from the fs
   ###
   loadFile: (tmplPath, enc='utf-8') ->
     fs = require 'fs'
