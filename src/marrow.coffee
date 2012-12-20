@@ -82,7 +82,7 @@ window.Marrow = class Marrow
   setHtml: (newHtml, tmplStr) ->
     !@tmplStr and @loadStr tmplStr
     @parse()
-    
+
     @tmpl.innerHTML = newHtml
     @tmpl
 
@@ -98,11 +98,12 @@ window.Marrow = class Marrow
   # JFDI
   ###
 
-  cmdDict: {
-    'bind': (ctx, target, args) ->
-      key = args[0]
-      target.innerHTML = ctx[key]
-  }
+  cmdDict: new ->
+    {
+      'bind': (ctx, target, args) =>
+        key = args[0]
+        target.innerHTML = ctx[key]
+    }
 
   # FIXME: This does not nest
   handle: ->
