@@ -34,7 +34,8 @@ window.Marrow = class Marrow
 
     @tmpl = @domParser.parseFromString @tmplStr, 'application/xml'
     if @tmpl.childNodes.length > 1
-      raise Error 'Do not know yet how to deal with multi-element templates'
+      console?.error 'Do not know yet how to deal with multi-element templates, got', @tmpl.childNodes
+      throw Error 'Do not know yet how to deal with multi-element templates, got'
 
   ###
   # Debugging
