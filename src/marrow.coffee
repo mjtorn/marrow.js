@@ -35,6 +35,9 @@ window.Marrow = class Marrow
     !@tmplStr and throw Error('Need template to parse')
 
     @tmpl = @domParser.parseFromString @tmplStr, 'application/xml'
+    if @tmpl.lastChild.localName == 'parsererror'
+      console?.log @tmpl
+      throw Error 'Failed parsing!'
 
     if @tmpl.childNodes.length == 0
       throw Error 'Need a childNode in the template:' + @tmplStr
