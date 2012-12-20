@@ -100,35 +100,44 @@ window.Marrow = class Marrow
 
   cmdDict: new ->
     {
-      'bind': (ctx, target, args) =>
+      'bind': (self, ctxStack, target, args) ->
         key = args[0]
-        target.innerHTML = ctx[key]
+        target.innerHTML = self._findInStack ctxStack, key
     }
 
   # FIXME: This does not nest
   handle: ->
     argc = arguments.length
-    if argc < 4
+    if argc < 5
       throw Error 'Need command, at least one argument and target element', arguments
     argv = Array.prototype.slice.call arguments
 
-    ctx = argv[0]
-    target = argv[1]
-    cmd = argv[2]
-    args = argv[3..argc - 1]
+    self = argv[0]
+    ctx = argv[1]
+    target = argv[2]
+    cmd = argv[3]
+    args = argv[4..argc - 1]
 
-    @cmdDict[cmd] ctx, target, args
+    @cmdDict[cmd] self, ctx, target, args
 
   # What actually renders
   _render: (ctx) ->
     !@tmplStr and throw Error 'Load a template before rendering'
     !@tmpl and @parse()
 
+    # We want a stack internally for foreach
+    if ctx.constructor != Array
+      ctx = [ctx]
+
     elems = @tmpl.getElementsByTagName('*')
     for elem in elems
       attrs = elem.attributes
       for attr in attrs
         if attr.name.search('data-') == 0
-          @handle ctx, elem, attr.name.split('-')[1..]..., attr.value
+          @handle @, ctx, elem, attr.name.split('-')[1..]..., attr.value
 
+  _findInStack: (ctxStack, key) ->
+    for ctx in ctxStack
+      value = ctx[key]
+      return value if value
 
