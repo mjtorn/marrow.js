@@ -81,6 +81,8 @@ window.Marrow = class Marrow
     if @tmpl?
       target.parentNode.replaceChild(@tmpl.childNodes[0], target)
 
+    target
+
   ###
   # Test wrapper for setting innerHTML
   ###
@@ -108,6 +110,7 @@ window.Marrow = class Marrow
       'bind': (self, ctxStack, target, args) ->
         key = args[0]
         target.innerHTML = self._findInStack ctxStack, key
+        target
     }
 
   # FIXME: This does not nest
