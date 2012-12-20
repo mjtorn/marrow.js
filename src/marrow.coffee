@@ -114,6 +114,44 @@ window.Marrow = class Marrow
         key = args[0]
         target.innerHTML = self._findInStack ctxStack, key
         target
+
+      'foreach': (self, ctxStack, target, args) ->
+        listKey = args[0]
+        key = args[1]
+
+        list = self._findInStack ctxStack, listKey
+
+        for entry in list
+          # Push our local entry into the context
+          # Javascript blows when it comes to using variable values as keys
+          newCtx = {}
+          newCtx[key] = entry
+          ctxStack.push newCtx
+
+          mrwTarget = new Marrow(target.innerHTML)
+
+          # Render into child node so replacing parent works
+          rendered = mrwTarget.render ctxStack, mrwTarget.tmpl.childNodes[0]
+
+          ## XXX: Remove this
+          #Proof it gets this far in foreach.html
+          console.log rendered.innerHTML == entry
+
+          ## FIXME: "Node cannot be inserted at the specified point in the hierarchy"
+          #console.log 'trying to append ', mrwTarget.tmpl, mrwTarget.tmpl.constructor.prototype.ELEMENT_NODE == 1
+          #target.appendChild mrwTarget.tmpl
+
+          ## FIXME: [XMLStylesheetProcessingInstruction
+          ## {
+          ##   data="href="chrome://global/l...tl.css" type="text/css"", length=54, nodeName="xml-stylesheet", more...
+          ## },
+          ## parsererror]
+          target.appendChild rendered
+
+          # Prevent stack from having old entries
+          ctxStack.pop()
+
+        target
     }
 
   # FIXME: This does not nest
