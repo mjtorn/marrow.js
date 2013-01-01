@@ -189,7 +189,8 @@ window.Marrow = class Marrow
           @handle @, ctx, elem, attr.name.split('-')[1..]..., attr.value
 
   _findInStack: (ctxStack, key) ->
-    for ctx in ctxStack
+    for i in [ctxStack.length-1..0] by -1
+      ctx = ctxStack[i]
       value = ctx[key]
       return value if value
 
