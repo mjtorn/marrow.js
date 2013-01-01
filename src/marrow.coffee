@@ -147,6 +147,7 @@ window.Marrow = class Marrow
         # Prevent stack from having old entries
         ctxStack.pop()
 
+        target.innerHTML = ''
         for elem in appendableElements
           target.appendChild elem
 
