@@ -84,8 +84,8 @@ window.Marrow = class Marrow
 
     @_render ctx
 
-    if @tmpl?
-      target.parentNode.replaceChild(@tmpl.childNodes[0], target)
+    ## Replace our raw template tag with what was rendered
+    target.parentNode.replaceChild(@tmpl.childNodes[0], target)
 
     target
 
@@ -126,32 +126,29 @@ window.Marrow = class Marrow
 
         # Push our local entry into the context
         ctxStack.push {}
+        # XXX: Not going through this array causes Parser Error o__O
+        appendableElements = []
         for entry in list
           # Javascript blows when it comes to using variable values as keys
           ctxStack[ctxStack.length - 1][key] = entry
 
+          # Create new targets for every entry
+          # This sort of clones the element, parsing the given html
           mrwTarget = new Marrow(target.innerHTML)
 
-          # Render into child node so replacing parent works
+          # Use the first child node for template
           rendered = mrwTarget.render ctxStack, mrwTarget.tmpl.childNodes[0]
 
-          ## XXX: Remove this
-          #Proof it gets this far in foreach.html
-          console.log rendered.innerHTML == entry
+          appendableElements.push rendered
 
-          ## FIXME: "Node cannot be inserted at the specified point in the hierarchy"
-          #console.log 'trying to append ', mrwTarget.tmpl, mrwTarget.tmpl.constructor.prototype.ELEMENT_NODE == 1
-          #target.appendChild mrwTarget.tmpl
-
-          ## FIXME: [XMLStylesheetProcessingInstruction
-          ## {
-          ##   data="href="chrome://global/l...tl.css" type="text/css"", length=54, nodeName="xml-stylesheet", more...
-          ## },
-          ## parsererror]
-          target.appendChild rendered
+          # XXX: This breaks, "Failed parsing"
+          #target.appendChild rendered
 
         # Prevent stack from having old entries
         ctxStack.pop()
+
+        for elem in appendableElements
+          target.appendChild elem
 
         target
     }
