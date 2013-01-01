@@ -9,15 +9,24 @@
             <span style="foobar" data-bind="name"></span>
         </div>
         <div id="marrow-test-2" data-bind="other">
+            This is not updated because you currently must use the parent element
+        </div>
+        <div id="marrow-test-3">
+            <span style="something" data-bind="other">
+            This is updated
+            </span>
         </div>
         <script type="text/javascript">
             mrw = new Marrow();
-            target = document.getElementById('marrow-test');
+            target = $('#marrow-test');
             mrw.loadDom(target);
             mrw.render({'name':'foo'}, target);
 
             mrw2 = new Marrow();
-            mrw2.render({'other': 'bar'}, 'marrow-test-2')
+            mrw2.render({'other': 'bar'}, '#marrow-test-2')
+
+            mrw3 = new Marrow();
+            mrw3.render({'other': 'bar'}, '#marrow-test-3')
         </script>
     </body>
 </html>
