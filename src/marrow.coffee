@@ -129,7 +129,7 @@ window.Marrow = class Marrow
         # XXX: Not going through this array causes Parser Error o__O
         appendableElements = []
         for entry in list
-          # Javascript blows when it comes to using variable values as keys
+          # Have our stack up to date
           ctxStack[ctxStack.length - 1][key] = entry
 
           # Create new targets for every entry
