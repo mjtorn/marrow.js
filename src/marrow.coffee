@@ -1,10 +1,9 @@
 window.Marrow = class Marrow
   ###
-  # Constructor takes an fs path for now. Probably the html string later
+  # Constructor optionally takes anything jQuery can deal with as an element
+  # If you don't pass anything, you must call one of the load methods
   ###
   constructor: (@tmplStr) ->
-    @domParser = new window.DOMParser()
-    @xmlSerializer = new window.XMLSerializer()
     @tmpl = null
 
     @tmplStr and @parse()
@@ -26,7 +25,8 @@ window.Marrow = class Marrow
   # Or dom
   ###
   loadDom: (domElement) ->
-      @tmplStr = @xmlSerializer.serializeToString domElement
+    @tmplStr = domElement.html()
+    @tmpl = domElement
 
   ###
   # Create a DOM object of the internal template string
@@ -34,18 +34,14 @@ window.Marrow = class Marrow
   parse: ->
     !@tmplStr and throw Error('Need template to parse')
 
-    @tmpl = @domParser.parseFromString @tmplStr, 'application/xml'
-    if @tmpl.lastChild.localName == 'parsererror'
-      console?.log @tmpl
-      throw Error 'Failed parsing!'
-
-    if @tmpl.childNodes.length == 0
-      throw Error 'Need a childNode in the template:' + @tmplStr
-    else if @tmpl.childNodes.length > 1
-      console?.error 'Do not know yet how to deal with multi-element templates, got', @tmpl.childNodes
-      throw Error 'Do not know yet how to deal with multi-element templates, got'
-
-    @tmpl.childNodes[0].removeAttribute 'xmlns'
+    # Always interpret the given input as jQuery
+    @tmpl = $(@tmplStr)
+    if @tmpl.children().length == 0
+      console.log 'Template has no children. Please give the parent', @tmpl
+      throw Error 'Template has no children. Please give the parent'
+    else if @tmpl.children().length != 1
+      console.log 'Do not know how to deal with multi-element templates', @tmpl
+      throw Error 'Do not know how to deal with multi-element templates'
 
   ###
   # Debugging
@@ -76,16 +72,13 @@ window.Marrow = class Marrow
   ###
   render: (ctx, target) ->
     if typeof target == 'string'
-      target = document.getElementById target
+      target = $(target)
       if not target
-        throw Error 'Need a destination element or id string'
+        throw Error 'Need a destination element or selector'
 
       @loadDom target
 
     @_render ctx
-
-    if @tmpl?
-      target.parentNode.replaceChild(@tmpl.childNodes[0], target)
 
     target
 
@@ -96,7 +89,7 @@ window.Marrow = class Marrow
     !@tmplStr and @loadStr tmplStr
     @parse()
 
-    @tmpl.innerHTML = newHtml
+    @tmpl.html newHtml
     @tmpl
 
   ###
@@ -105,7 +98,7 @@ window.Marrow = class Marrow
   serialize: ->
     !@tmpl and throw Error 'load and parse something first'
 
-    return @xmlSerializer.serializeToString @tmpl
+    return @tmpl.wrap('<div></div>').parent().html()
 
   ###
   # JFDI
@@ -115,7 +108,7 @@ window.Marrow = class Marrow
     {
       'bind': (self, ctxStack, target, args) ->
         key = args[0]
-        target.innerHTML = self._findInStack ctxStack, key
+        target.html self._findInStack ctxStack, key
         target
 
       'foreach': (self, ctxStack, target, args) ->
@@ -126,32 +119,24 @@ window.Marrow = class Marrow
 
         # Push our local entry into the context
         ctxStack.push {}
+        appendableElements = []
         for entry in list
-          # Javascript blows when it comes to using variable values as keys
+          # Update our stack element
           ctxStack[ctxStack.length - 1][key] = entry
 
-          mrwTarget = new Marrow(target.innerHTML)
+          # Wrap target into Marrow() to make rendering possible
+          mrwTarget = new Marrow(target)
 
-          # Render into child node so replacing parent works
-          rendered = mrwTarget.render ctxStack, mrwTarget.tmpl.childNodes[0]
+          # XXX: This is why we use jQuery, this didn't work without it
+          rendered = mrwTarget.render ctxStack, $(mrwTarget.tmpl.children(0).clone())
 
-          ## XXX: Remove this
-          #Proof it gets this far in foreach.html
-          console.log rendered.innerHTML == entry
-
-          ## FIXME: "Node cannot be inserted at the specified point in the hierarchy"
-          #console.log 'trying to append ', mrwTarget.tmpl, mrwTarget.tmpl.constructor.prototype.ELEMENT_NODE == 1
-          #target.appendChild mrwTarget.tmpl
-
-          ## FIXME: [XMLStylesheetProcessingInstruction
-          ## {
-          ##   data="href="chrome://global/l...tl.css" type="text/css"", length=54, nodeName="xml-stylesheet", more...
-          ## },
-          ## parsererror]
-          target.appendChild rendered
+          appendableElements.push rendered
 
         # Prevent stack from having old entries
         ctxStack.pop()
+
+        for elem in appendableElements
+          target.prepend elem
 
         target
     }
@@ -180,12 +165,13 @@ window.Marrow = class Marrow
     if ctx.constructor != Array
       ctx = [ctx]
 
-    elems = @tmpl.getElementsByTagName('*')
+    elems = @tmpl.children()
     for elem in elems
-      attrs = elem.attributes
+      $elem = $(elem)
+      attrs = $elem.get(0).attributes
       for attr in attrs
         if attr.name.search('data-') == 0
-          @handle @, ctx, elem, attr.name.split('-')[1..]..., attr.value
+          @handle @, ctx, $elem, attr.name.split('-')[1..]..., attr.value
 
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
