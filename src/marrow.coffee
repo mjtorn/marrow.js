@@ -124,12 +124,11 @@ window.Marrow = class Marrow
 
         list = self._findInStack ctxStack, listKey
 
+        # Push our local entry into the context
+        ctxStack.push {}
         for entry in list
-          # Push our local entry into the context
           # Javascript blows when it comes to using variable values as keys
-          newCtx = {}
-          newCtx[key] = entry
-          ctxStack.push newCtx
+          ctxStack[ctxStack.length - 1][key] = entry
 
           mrwTarget = new Marrow(target.innerHTML)
 
@@ -151,8 +150,8 @@ window.Marrow = class Marrow
           ## parsererror]
           target.appendChild rendered
 
-          # Prevent stack from having old entries
-          ctxStack.pop()
+        # Prevent stack from having old entries
+        ctxStack.pop()
 
         target
     }
