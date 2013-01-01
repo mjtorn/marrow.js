@@ -185,6 +185,9 @@ window.Marrow = class Marrow
         if attr.name.search('data-') == 0
           @handle @, ctx, elem, attr.name.split('-')[1..]..., attr.value
 
+    # Explicit return makes for cleaner javascript
+    return
+
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
       ctx = ctxStack[i]
