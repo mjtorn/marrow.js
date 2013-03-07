@@ -147,7 +147,6 @@ window.Marrow = class Marrow
         target
     }
 
-  # FIXME: This does not nest
   handle: ->
     argc = arguments.length
     if argc < 5
@@ -162,6 +161,9 @@ window.Marrow = class Marrow
 
     @cmdDict[cmd] self, ctx, target, args
 
+    for child in $(target).children()
+      @renderOnly ctx, child
+
   # What actually renders
   _render: (ctx) ->
     !@tmplStr and throw Error 'Load a template before rendering'
@@ -173,12 +175,18 @@ window.Marrow = class Marrow
 
     elems = @tmpl.children()
     for elem in elems
-      console.log elem
       $elem = $(elem)
       attrs = $elem.get(0).attributes
       for attr in attrs
         if attr.name.search('data-') == 0
           @handle @, ctx, $elem, attr.name.split('-')[1..]..., attr.value
+
+  renderOnly: (ctx, target) ->
+    $target = $(target)
+    attrs = $target.get(0).attributes
+    for attr in attrs
+      if attr.name.search('data-') == 0
+        @handle @, ctx, $target, attr.name.split('-')[1..]..., attr.value
 
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
