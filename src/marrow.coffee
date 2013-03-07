@@ -106,6 +106,11 @@ window.Marrow = class Marrow
 
   cmdDict: new ->
     {
+      'attr': (self, ctxStack, target, args) ->
+        attrName = args[0]
+        value = self._findInStack ctxStack, attrName
+        target.attr(attrName, value)
+
       'bind': (self, ctxStack, target, args) ->
         key = args[0]
         target.html self._findInStack ctxStack, key
