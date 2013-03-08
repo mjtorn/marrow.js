@@ -1,4 +1,4 @@
-window.Marrow = class Marrow
+exports.Marrow = class Marrow
   ###
   # Constructor optionally takes anything jQuery can deal with as an element
   # If you don't pass anything, you must call one of the load methods
