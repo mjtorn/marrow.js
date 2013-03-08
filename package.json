@@ -1,0 +1,14 @@
+{
+  "name": "marrow.js",
+  "version": "0.0.1",
+  "author": {
+    "name": "Markus Törnqvist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mjtorn/marrow.js.git"
+  },
+  "main": "./index.js",
+  "readmeFilename": "README.d"
+}
+
