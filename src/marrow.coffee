@@ -194,5 +194,8 @@ class Marrow
       value = ctx[key]
       return value if value
 
-module.exports = Marrow
+if module?
+  module.exports = Marrow
+else
+  exports.Marrow = Marrow
 
