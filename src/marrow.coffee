@@ -1,4 +1,4 @@
-window.Marrow = class Marrow
+class Marrow
   ###
   # Constructor optionally takes anything jQuery can deal with as an element
   # If you don't pass anything, you must call one of the load methods
@@ -193,4 +193,6 @@ window.Marrow = class Marrow
       ctx = ctxStack[i]
       value = ctx[key]
       return value if value
+
+module.exports = Marrow
 
