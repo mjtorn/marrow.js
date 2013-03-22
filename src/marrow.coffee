@@ -164,15 +164,19 @@ class Marrow
     if ctx.constructor != Array
       ctx = [ctx]
 
-    $elem = $(target)
-    attrs = target.get(0).attributes
-    for attr in attrs
-      if attr.name.search('data-') == 0
-        @handle @, ctx, $elem, attr.name.split('-')[1..]..., attr.value
+    $target = $(target)
 
-    for elem in target.children()
-      $elem = $(elem)
-      @render ctx, $elem, depth+1
+    for subTarget in $target
+      $subTarget = $(subTarget)
+
+      attrs = $subTarget.get(0).attributes
+      for attr in attrs
+        if attr.name.search('data-') == 0
+          @handle @, ctx, $subTarget, attr.name.split('-')[1..]..., attr.value
+
+      for elem in $subTarget.children()
+        $elem = $(elem)
+        @render ctx, $elem, depth+1
 
     target
 
