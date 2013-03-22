@@ -127,8 +127,15 @@ class Marrow
         # Prevent stack from having old entries
         ctxStack.pop()
 
+        # Replace the first empty one, then append
+        i = 0
         for elem in appendableElements
-          target.prepend elem
+          if i == 0
+            target.html(elem)
+          else
+            target.append elem
+
+          i++
 
         target
     }
