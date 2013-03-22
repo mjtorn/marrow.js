@@ -126,7 +126,8 @@ class Marrow
           mrwTarget = new Marrow(target)
 
           # XXX: This is why we use jQuery, this didn't work without it
-          rendered = mrwTarget.render ctxStack, $(mrwTarget.tmpl.children(0).clone())
+          childTarget = mrwTarget.tmpl.children(0).clone()
+          rendered = mrwTarget.render ctxStack, $(childTarget)
 
           appendableElements.push rendered
 
