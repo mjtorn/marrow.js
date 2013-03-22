@@ -96,6 +96,7 @@ class Marrow
         attrName = args[0]
         value = self._findInStack ctxStack, attrName
         target.attr(attrName, value)
+        target
 
       'bind': (self, ctxStack, target, args) ->
         key = args[0]
