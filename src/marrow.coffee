@@ -36,14 +36,7 @@ class Marrow
 
     # Always interpret the given input as jQuery
     @tmpl = $(@tmplStr)
-    # if @tmpl.children().length == 0
-    #   console.log 'Template has no children. Please give the parent', @tmpl
-    #   throw Error 'Template has no children. Please give the parent'
-    ###
-    else if @tmpl.children().length != 1
-      console.log 'Do not know how to deal with multi-element templates', @tmpl
-      throw Error 'Do not know how to deal with multi-element templates'
-    ###
+
   ###
   # Debugging
   ###
