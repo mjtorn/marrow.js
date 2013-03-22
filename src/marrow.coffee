@@ -64,7 +64,7 @@ class Marrow
   # Return a rendered string
   ###
   renderString: (ctx) ->
-    @_render ctx
+    @render ctx, @tmpl
     if @tmpl?
       return @serialize()
 
