@@ -1,3 +1,9 @@
+escapeStr = (s) ->
+  s.trim().replace('\n', '\\n', 'g')
+
+unescapeStr = (s) ->
+  s.trim().replace('\\n', '\n', 'g')
+
 class Marrow
   ###
   # Constructor optionally takes anything jQuery can deal with as an element
@@ -186,4 +192,6 @@ if module?
   module.exports = Marrow
 else
   exports.Marrow = Marrow
+  exports.escapeStr = escapeStr
+  exports.unescapeStr = unescapeStr
 
