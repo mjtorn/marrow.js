@@ -195,7 +195,7 @@ class Marrow
     ctx = argv[1]
     target = argv[2]
     cmd = argv[3]
-    args = argv[4..argc - 1]
+    args = argv[4..-1]
 
     @cmdDict[cmd] self, ctx, target, args
 
