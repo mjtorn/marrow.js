@@ -99,8 +99,13 @@ class Marrow
   cmdDict: new ->
     {
       'attr': (self, ctxStack, target, args) ->
-        attrName = args[0]
-        value = self._findInStack ctxStack, attrName
+        # Doing data-attr-class or data-attr-data-href
+        attrName = args[0...-1].join '-'
+
+        key = args[-1...][0]
+
+        value = self._findInStack ctxStack, key
+
         target.attr(attrName, value)
         target
 
