@@ -69,21 +69,6 @@ class Marrow
       return @serialize()
 
   ###
-  # Render to target element
-  ###
-  render: (ctx, target) ->
-    if typeof target == 'string'
-      target = $(target)
-      if not target
-        throw Error 'Need a destination element or selector'
-
-      @loadDom target
-
-    @_render ctx
-
-    target
-
-  ###
   # Test wrapper for setting innerHTML
   ###
   setHtml: (newHtml, tmplStr) ->
@@ -146,6 +131,33 @@ class Marrow
 
         target
     }
+
+  walk: (ctx, target, depth=1) ->
+    console.log depth, target
+
+    attrs = target.get(0).attributes
+    for attr in attrs
+      if attr.name.search('data-') == 0
+        console.log 'Found attr', attr
+
+    for elem in target.children()
+      $elem = $(elem)
+      @walk ctx, $elem, depth+1
+
+  render: (ctx, target, depth=1) ->
+    # We want a stack internally for foreach
+    if ctx.constructor != Array
+      ctx = [ctx]
+
+    $elem = $(target)
+    attrs = target.get(0).attributes
+    for attr in attrs
+      if attr.name.search('data-') == 0
+        @handle @, ctx, $elem, attr.name.split('-')[1..]..., attr.value
+
+    for elem in target.children()
+      $elem = $(elem)
+      @render ctx, $elem, depth+1
 
   handle: ->
     argc = arguments.length
