@@ -100,7 +100,7 @@ class Marrow
 
       'bind': (self, ctxStack, target, args) ->
         key = args[0]
-        target.html self._findInStack ctxStack, key
+        target.html(self._findInStack ctxStack, key)
         target
 
       'foreach': (self, ctxStack, target, args) ->
