@@ -12,6 +12,10 @@ class Marrow
   constructor: (@tmplStr) ->
     @tmpl = null
 
+    # Always assume \\n is an escaped newline, not valid user input or such
+    if @tmplStr and @tmplStr.constructor == String
+      @tmplStr = $(unescapeStr @tmplStr)
+
     @tmplStr and @parse()
 
   ###
