@@ -173,33 +173,6 @@ class Marrow
 
     @cmdDict[cmd] self, ctx, target, args
 
-    for child in $(target).children()
-      @renderOnly ctx, child
-
-  # What actually renders
-  _render: (ctx) ->
-    !@tmplStr and throw Error 'Load a template before rendering'
-    !@tmpl and @parse()
-
-    # We want a stack internally for foreach
-    if ctx.constructor != Array
-      ctx = [ctx]
-
-    elems = @tmpl.children()
-    for elem in elems
-      $elem = $(elem)
-      attrs = $elem.get(0).attributes
-      for attr in attrs
-        if attr.name.search('data-') == 0
-          @handle @, ctx, $elem, attr.name.split('-')[1..]..., attr.value
-
-  renderOnly: (ctx, target) ->
-    $target = $(target)
-    attrs = $target.get(0).attributes
-    for attr in attrs
-      if attr.name.search('data-') == 0
-        @handle @, ctx, $target, attr.name.split('-')[1..]..., attr.value
-
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
       ctx = ctxStack[i]
