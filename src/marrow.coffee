@@ -14,7 +14,10 @@ class Marrow
 
     # Always assume \\n is an escaped newline, not valid user input or such
     if @tmplStr and @tmplStr.constructor == String
-      @tmplStr = $(unescapeStr @tmplStr)
+      us = unescapeStr @tmplStr
+      # jQuery considers some newline-whitespace-sets to be empty textnodes o_O
+      us = us.replace />\s*</gm, '><'
+      @tmplStr = us.replace '\n', '', 'g'
 
     @tmplStr and @parse()
 
