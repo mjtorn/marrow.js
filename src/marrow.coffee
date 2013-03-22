@@ -160,6 +160,8 @@ class Marrow
       $elem = $(elem)
       @render ctx, $elem, depth+1
 
+    target
+
   handle: ->
     argc = arguments.length
     if argc < 5
