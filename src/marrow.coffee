@@ -162,6 +162,29 @@ class Marrow
       $elem = $(elem)
       @walk ctx, $elem, depth+1
 
+  cmdFromAttr: (attr) ->
+    ### Get the command from given attribute
+    ###
+
+    attr.name.split('-')[1]
+
+  sortCmds: (a1, a2) =>
+    ### Sort two attributes as commands
+    ###
+
+    a1 = @cmdDict[@cmdFromAttr a1]
+    a2 = @cmdDict[@cmdFromAttr a2]
+
+    not a1?.sortOrder and throw Error 'Unsortable object ' + a1
+    not a2?.sortOrder and throw Error 'Unsortable object ' + a2
+
+    if a1.sortOrder == a2.sortOrder
+      return 0
+    else if a1.sortOrder > a2.sortOrder
+      return 1
+
+    return -1
+
   render: (ctx, target, depth=1) ->
     # We want a stack internally for foreach
     if ctx.constructor != Array
