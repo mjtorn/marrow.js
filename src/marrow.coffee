@@ -1,3 +1,6 @@
+## This is exported, set everything here
+MRW = {}
+
 escapeStr = (s) ->
   s.trim().replace('\n', '\\n', 'g')
 
@@ -256,19 +259,22 @@ class Marrow
       value = ctx[key]
       return value if value
 
-class MarrowTemplates
+class Templates
   registry: {}
   add: (name, tmplStr) ->
     @registry[name] = tmplStr
   get: (name) ->
     @registry[name]
 
+## Export section
+MRW.Marrow = Marrow
+MRW.Templates = Templates
+
+MRW.escapeStr = escapeStr
+MRW.unescapeStr = unescapeStr
+
 if module?
-  module.exports = Marrow
-  module.exports = MarrowTemplates
+  module.exports = MRW
 else
-  exports.Marrow = Marrow
-  exports.MarrowTemplates = MarrowTemplates
-  exports.escapeStr = escapeStr
-  exports.unescapeStr = unescapeStr
+  exports.MRW = MRW
 
