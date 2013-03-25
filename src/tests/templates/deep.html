@@ -37,8 +37,8 @@
         <script type="text/javascript">
             $(function() {
                 target = $('#jobentry-view');
-                s = escapeStr(target.html());
-                mrw = new Marrow(s);
+                s = MRW.escapeStr(target.html());
+                mrw = new MRW.Marrow(s);
                 ctx = {
                     'id': '123',
                     'heading': 'testor',
