@@ -1,6 +1,7 @@
 <html>
     <head>
         <script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+        <script type="text/javascript">exports=window;</script>
         <script src="marrow.js" type="text/javascript"></script>
     </head>
 
@@ -17,15 +18,15 @@
             </span>
         </div>
         <script type="text/javascript">
-            mrw = new Marrow();
+            mrw = new MRW.Marrow();
             target = $('#marrow-test');
             mrw.loadDom(target);
             mrw.render({'name':'foo'}, target);
 
-            mrw2 = new Marrow();
+            mrw2 = new MRW.Marrow();
             mrw2.render({'other': 'bar'}, '#marrow-test-2')
 
-            mrw3 = new Marrow();
+            mrw3 = new MRW.Marrow();
             mrw3.render({'other': 'bar'}, '#marrow-test-3')
         </script>
     </body>
