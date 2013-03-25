@@ -195,10 +195,15 @@ class Marrow
     for subTarget in $target
       $subTarget = $(subTarget)
 
+      ## Extract all attrs and put them in a sane
+      ## order before executing
       attrs = $subTarget.get(0).attributes
+      attrs = Array.prototype.slice.call attrs
+      attrs = (a for a in attrs when a.name.search('data-') == 0)
+      attrs = attrs.sort @sortCmds
+
       for attr in attrs
-        if attr.name.search('data-') == 0
-          @handle @, ctx, $subTarget, attr.name.split('-')[1..]..., attr.value
+        @handle @, ctx, $subTarget, attr.name.split('-')[1..]..., attr.value
 
       for elem in $subTarget.children()
         $elem = $(elem)
