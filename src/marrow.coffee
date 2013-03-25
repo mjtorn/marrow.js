@@ -90,6 +90,8 @@ class Marrow
           # Doing data-attr-class or data-attr-data-href
           attrName = args[0...-1].join '-'
 
+          not attrName and throw Error 'Missing attribute name'
+
           key = args[-1...][0]
 
           value = self._findInStack ctxStack, key
