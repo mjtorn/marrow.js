@@ -51,22 +51,6 @@ class Marrow
     @tmpl = $(@tmplStr)
 
   ###
-  # Debugging
-  ###
-  dumpDom: (node, cb, depth) ->
-    !@tmpl and @parse()
-
-    node ?= elems = @tmpl.getElementsByTagName('*')[0]
-    depth ?= 0
-    cb ?= console?.log depth, ' :: ', node.tagName
-
-    node = node.firstChild
-    while node
-      depth++
-      @dumpDom node, cb, depth
-      node = node.nextSibling
-
-  ###
   # Return a rendered string
   ###
   renderString: (ctx) ->
