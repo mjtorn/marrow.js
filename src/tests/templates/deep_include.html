@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script src="../../../lib/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script> -->
+        <script type="text/javascript">exports=window;</script>
+        <script src="marrow.js" type="text/javascript"></script>
+    </head>
+
+    <body>
+        <div id="jobentry-view">
+          <div data-attr-id="id" class="jobentry-view-content">
+            <h1 data-bind="heading"></h1>
+            <div data-bind="descr_html"></div>
+
+            <table class="job-info table table-bordered">
+            <tr>
+                <td class="job-info-label">Link</td>
+                <td><a href="#" target="_new" data-bind="link"></a></td>
+                <td>
+                    <ul data-foreach-fishes="fish" data-include="fishlist">
+                    </ul>
+                </td>
+            </tr>
+          </table>
+
+        <div data-attr-class="klass" data-attr-first-second="combovalue">
+            <div data-foreach-fishes="fish">
+                <pre data-bind="fish"></pre>
+            </div>
+        </div>
+
+          </div>
+        </div>
+
+        <script type="text/javascript">
+            fishList = '<li data-bind="fish"></li>';
+
+            templates = new MarrowTemplates();
+            templates.add('fishlist', fishList);
+            $(function() {
+                target = $('#jobentry-view');
+
+                s = escapeStr(target.html());
+                mrw = new Marrow(s);
+                ctx = {
+                    'id': '123',
+                    'heading': 'testor',
+                    'descr_html': '<pre>lol</pre>',
+                    'link': 'http://www.efukt.com/',
+                    'fishes': ['trout', 'flounder', 'bass', 'salmonella'],
+                    'klass': 'fishlist',
+                    'combovalue': 'tons of text'
+                }
+                //mrw.loadDom(target);
+                //mrw.renderString(ctx);
+            });
+        </script>
+    </body>
+</html>
+
