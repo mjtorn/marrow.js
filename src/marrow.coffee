@@ -82,64 +82,72 @@ class Marrow
 
   cmdDict: new ->
     {
-      'attr': (self, ctxStack, target, args) ->
-        # Doing data-attr-class or data-attr-data-href
-        attrName = args[0...-1].join '-'
+      'attr':
+        'call': (self, ctxStack, target, args) ->
+          # Doing data-attr-class or data-attr-data-href
+          attrName = args[0...-1].join '-'
 
-        key = args[-1...][0]
+          key = args[-1...][0]
 
-        value = self._findInStack ctxStack, key
+          value = self._findInStack ctxStack, key
 
-        target.attr(attrName, value)
-        target
+          target.attr(attrName, value)
+          target
+        'sortOrder': 2
 
-      'bind': (self, ctxStack, target, args) ->
-        key = args[0]
-        target.html(self._findInStack ctxStack, key)
-        target
+      'bind':
+        'call':(self, ctxStack, target, args) ->
+          key = args[0]
+          target.html(self._findInStack ctxStack, key)
+          target
+        'sortOrder': 2
 
-      'include': (self, ctxStack, target, args) ->
-        templateName = args[0]
+      'include':
+        'call': (self, ctxStack, target, args) ->
+          templateName = args[0]
 
-        ## FIXME: do not necessarily enforce global name "templates"
-        target.html(templates.get templateName)
+          ## FIXME: do not necessarily enforce global name "templates"
+          target.html(templates.get templateName)
+        'sortOrder': 1
 
-      'foreach': (self, ctxStack, target, args) ->
-        listKey = args[0]
-        key = args[1]
+      'foreach':
+        'call': (self, ctxStack, target, args) ->
+          listKey = args[0]
+          key = args[1]
 
-        list = self._findInStack ctxStack, listKey
+          list = self._findInStack ctxStack, listKey
 
-        # Push our local entry into the context
-        ctxStack.push {}
-        appendableElements = []
-        for entry in list
-          # Update our stack element
-          ctxStack[ctxStack.length - 1][key] = entry
+          # Push our local entry into the context
+          ctxStack.push {}
+          appendableElements = []
+          for entry in list
+            # Update our stack element
+            ctxStack[ctxStack.length - 1][key] = entry
 
-          # Wrap target into Marrow() to make rendering possible
-          mrwTarget = new Marrow(target)
+            # Wrap target into Marrow() to make rendering possible
+            mrwTarget = new Marrow(target)
 
-          # XXX: This is why we use jQuery, this didn't work without it
-          childTarget = mrwTarget.tmpl.children(0).clone()
-          rendered = mrwTarget.render ctxStack, $(childTarget)
+            # XXX: This is why we use jQuery, this didn't work without it
+            childTarget = mrwTarget.tmpl.children(0).clone()
+            rendered = mrwTarget.render ctxStack, $(childTarget)
 
-          appendableElements.push rendered
+            appendableElements.push rendered
 
-        # Prevent stack from having old entries
-        ctxStack.pop()
+          # Prevent stack from having old entries
+          ctxStack.pop()
 
-        # Replace the first empty one, then append
-        i = 0
-        for elem in appendableElements
-          if i == 0
-            target.html(elem)
-          else
-            target.append elem
+          # Replace the first empty one, then append
+          i = 0
+          for elem in appendableElements
+            if i == 0
+              target.html(elem)
+            else
+              target.append elem
 
-          i++
+            i++
 
-        target
+          target
+        'sortOrder': 2
     }
 
   walk: (ctx, target, depth=1) ->
@@ -187,7 +195,7 @@ class Marrow
     cmd = argv[3]
     args = argv[4..-1]
 
-    @cmdDict[cmd] self, ctx, target, args
+    @cmdDict[cmd].call self, ctx, target, args
 
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
