@@ -113,8 +113,7 @@ class Marrow
         'call': (self, ctxStack, target, args) ->
           templateName = args[0]
 
-          ## FIXME: do not necessarily enforce global name "templates"
-          target.html(templates.get templateName)
+          target.html(MRW.Templates.get templateName)
 
           return true
         'sortOrder': 1
@@ -261,7 +260,7 @@ class Marrow
       value = ctx[key]
       return value if value
 
-class Templates
+Templates =
   registry: {}
   add: (name, tmplStr) ->
     @registry[name] = tmplStr
