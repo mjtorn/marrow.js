@@ -98,6 +98,12 @@ class Marrow
         target.html(self._findInStack ctxStack, key)
         target
 
+      'include': (self, ctxStack, target, args) ->
+        templateName = args[0]
+
+        ## FIXME: do not necessarily enforce global name "templates"
+        target.html(templates.get templateName)
+
       'foreach': (self, ctxStack, target, args) ->
         listKey = args[0]
         key = args[1]
@@ -189,10 +195,19 @@ class Marrow
       value = ctx[key]
       return value if value
 
+class MarrowTemplates
+  registry: {}
+  add: (name, tmplStr) ->
+    @registry[name] = tmplStr
+  get: (name) ->
+    @registry[name]
+
 if module?
   module.exports = Marrow
+  module.exports = MarrowTemplates
 else
   exports.Marrow = Marrow
+  exports.MarrowTemplates = MarrowTemplates
   exports.escapeStr = escapeStr
   exports.unescapeStr = unescapeStr
 
