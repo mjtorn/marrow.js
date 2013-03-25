@@ -159,6 +159,13 @@ class Marrow
           return val?
         'sortOrder': 2
 
+      'renderif':
+        'call': (self, ctxStack, target, args) ->
+          val = self._findInStack ctxStack, args[0]
+          if not val?
+            target.remove()
+        'sortOrder': 2
+
     }
 
   walk: (ctx, target, depth=1) ->
