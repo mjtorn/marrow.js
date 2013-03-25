@@ -172,15 +172,20 @@ class Marrow
     ### Sort two attributes as commands
     ###
 
-    a1 = @cmdDict[@cmdFromAttr a1]
-    a2 = @cmdDict[@cmdFromAttr a2]
+    a1 = @cmdFromAttr a1
+    c1 = @cmdDict[a1]
+    not c1? and throw Error('Unknown command "' + a1 + '"')
 
-    not a1?.sortOrder and throw Error 'Unsortable object ' + a1
-    not a2?.sortOrder and throw Error 'Unsortable object ' + a2
+    a2 = @cmdFromAttr a2
+    c2 = @cmdDict[a2]
+    not c2? and throw Error('Unknown command "' + a2 + '"')
 
-    if a1.sortOrder == a2.sortOrder
+    not c1.sortOrder and throw Error 'Unsortable object ' + c1
+    not c2.sortOrder and throw Error 'Unsortable object ' + c2
+
+    if c1.sortOrder == c2.sortOrder
       return 0
-    else if a1.sortOrder > a2.sortOrder
+    else if c1.sortOrder > c2.sortOrder
       return 1
 
     return -1
