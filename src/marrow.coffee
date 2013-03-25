@@ -92,14 +92,16 @@ class Marrow
           value = self._findInStack ctxStack, key
 
           target.attr(attrName, value)
-          target
+
+          return true
         'sortOrder': 2
 
       'bind':
         'call':(self, ctxStack, target, args) ->
           key = args[0]
           target.html(self._findInStack ctxStack, key)
-          target
+
+          return true
         'sortOrder': 2
 
       'include':
@@ -108,6 +110,8 @@ class Marrow
 
           ## FIXME: do not necessarily enforce global name "templates"
           target.html(templates.get templateName)
+
+          return true
         'sortOrder': 1
 
       'foreach':
@@ -146,8 +150,15 @@ class Marrow
 
             i++
 
-          target
+          return true
         'sortOrder': 2
+
+      'if':
+        'call': (self, ctxStack, target, args) ->
+          val = self._findInStack ctxStack, args[0]
+          return val?
+        'sortOrder': 2
+
     }
 
   walk: (ctx, target, depth=1) ->
@@ -208,7 +219,9 @@ class Marrow
       attrs = attrs.sort @sortCmds
 
       for attr in attrs
-        @handle @, ctx, $subTarget, attr.name.split('-')[1..]..., attr.value
+        cont = @handle @, ctx, $subTarget, attr.name.split('-')[1..]..., attr.value
+        if not cont
+          break
 
       for elem in $subTarget.children()
         $elem = $(elem)
