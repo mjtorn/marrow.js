@@ -11,7 +11,20 @@
         <div id="jobentry-view">
           <div data-attr-id="id" class="jobentry-view-content">
             <h1 data-bind="heading"></h1>
-            <div data-bind="descr_html"></div>
+
+            <div>
+                <h2>We have some if tests</h2>
+                <p>ID comes here if it is found: <span data-if="id" data-bind="id"></span> </p>
+                <div>Show default span if not set:
+                    <div data-renderif="ENOEXIST" data-bind="ENOTFOUND"> THIS IS REMOVED
+                        <p>Include if id is set: <span data-if="id" data-include="include-for-id">&lt;- this is removed because the parent renderif removes everything</span> </p>
+                   </div>
+               </div>
+
+                <div>
+                    <p>OUTSIDE: Include if id is set: <span data-if="id" data-include="include-for-id"></span> </p>
+                </div>
+            </div>
 
             <table class="job-info table table-bordered">
             <tr>
@@ -29,15 +42,18 @@
                 <pre data-bind="fish"></pre>
             </div>
         </div>
+          <div data-bind="descr_html"></div>
 
           </div>
         </div>
 
         <script type="text/javascript">
             fishList = '<li data-bind="fish"></li>';
+            idInclusion = '<span style="color: red;">SET!</span>'
 
             templates = new MarrowTemplates();
             templates.add('fishlist', fishList);
+            templates.add('include-for-id', idInclusion);
             $(function() {
                 target = $('#jobentry-view');
 
