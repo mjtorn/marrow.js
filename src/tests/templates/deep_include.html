@@ -51,14 +51,14 @@
             fishList = '<li data-bind="fish"></li>';
             idInclusion = '<span style="color: red;">SET!</span>'
 
-            templates = new MarrowTemplates();
+            templates = new MRW.Templates();
             templates.add('fishlist', fishList);
             templates.add('include-for-id', idInclusion);
             $(function() {
                 target = $('#jobentry-view');
 
                 s = escapeStr(target.html());
-                mrw = new Marrow(s);
+                mrw = new MRW.Marrow(s);
                 ctx = {
                     'id': '123',
                     'heading': 'testor',
