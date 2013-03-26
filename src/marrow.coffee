@@ -226,7 +226,7 @@ class Marrow
       ## order before executing
       attrs = $subTarget.get(0).attributes
       attrs = Array.prototype.slice.call attrs
-      attrs = (a for a in attrs when a.name.search('data-') == 0)
+      attrs = (a for a in attrs when a.name.search('data-') == 0 and @cmdDict[@cmdFromAttr a])
       attrs = attrs.sort @sortCmds
 
       for attr in attrs
