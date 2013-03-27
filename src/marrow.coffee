@@ -35,7 +35,7 @@ defaultCmds = {
           filter = split[0]
           filterArgs = split[1..]
 
-          filterArgs = filterArgClean fArg for fArg in filterArgs
+          filterArgs = (filterArgClean fArg for fArg in filterArgs)
 
         func = Filters.get filter
         not func and throw Error 'Unknown filter ' + filter
