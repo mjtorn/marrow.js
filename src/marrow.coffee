@@ -89,6 +89,10 @@ defaultCmds = {
 defaultFilters = {
   'upper': (s) -> s.toUpperCase()
   'lower': (s) -> s.toLowerCase()
+  'reverse': (s) ->
+    l = s.split ''
+    l.reverse()
+    l.join ''
 }
 
 ## This is exported, set everything here
@@ -239,6 +243,7 @@ class Marrow
       ## order before executing
       attrs = $subTarget.get(0).attributes
       attrs = Array.prototype.slice.call attrs
+
       attrs = (a for a in attrs when a.name.search('data-') == 0 and MRW.Commands.get @cmdFromAttr a)
       attrs = attrs.sort @sortCmds
 
