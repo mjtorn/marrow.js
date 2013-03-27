@@ -20,7 +20,17 @@ defaultCmds = {
     'call':(self, ctxStack, target, args, filters) ->
       key = args[0]
 
+      keyAttrs = null
+      if key.indexOf('.') > -1
+        split = key.split '.'
+        key = split[0]
+        keyAttrs = split[1..]
+
       value = self._findInStack ctxStack, key
+
+      if keyAttrs
+        for keyAttr in keyAttrs
+          value = value[keyAttr]
 
       filterArgClean = (filterArg) =>
         if filterArg[0] == "'" and filterArg[filterArg.length - 1] == "'"
