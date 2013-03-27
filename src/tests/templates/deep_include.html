@@ -22,7 +22,7 @@
                </div>
 
                 <div>
-                    <p>OUTSIDE: Include if id is set: <span data-if="id" data-include="include-for-id"></span> </p>
+                    <p><span data-bind="outside-text|upper|reverse"></span>: Include if id is set: <span data-if="id" data-include="include-for-id"></span> </p>
                 </div>
             </div>
 
@@ -63,6 +63,7 @@
                     'id': '123',
                     'heading': 'testor',
                     'descr_html': '<pre>lol</pre>',
+                    'outside-text': 'outside',
                     'link': 'http://www.efukt.com/',
                     'fishes': ['trout', 'flounder', 'bass', 'salmonella'],
                     'klass': 'fishlist',
