@@ -100,6 +100,10 @@ defaultFilters = {
     l = s.split ''
     l.reverse()
     l.join ''
+  'append': (s, args) ->
+    for arg in args
+      s += arg
+    s
 }
 
 ## This is exported, set everything here
