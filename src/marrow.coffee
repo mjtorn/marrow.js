@@ -86,6 +86,11 @@ defaultCmds = {
     'sortOrder': 2
   }
 
+defaultFilters = {
+  'upper': (s) -> s.toUpperCase()
+  'lower': (s) -> s.toLowerCase()
+}
+
 ## This is exported, set everything here
 MRW = {}
 
@@ -98,6 +103,10 @@ unescapeStr = (s) ->
 setupCommands = ->
   for cmdName, struct of defaultCmds
     Commands.add cmdName, struct['call'], struct['sortOrder']
+
+setupFilters = ->
+  for filterName, func of defaultFilters
+    Filters.add filterName, func
 
 class Marrow
   ###
@@ -282,13 +291,22 @@ Commands =
   get: (name, func) ->
     @registry[name]
 
+Filters =
+  registry: {}
+  add: (name, func) ->
+    @registry[name] = func
+  get: (name) ->
+    @registry[name]
+
 ## Defaults setup
 setupCommands()
+setupFilters()
 
 ## Export section
 MRW.Marrow = Marrow
 MRW.Commands = Commands
 MRW.Templates = Templates
+MRW.Filters = Filters
 
 MRW.escapeStr = escapeStr
 MRW.unescapeStr = unescapeStr
