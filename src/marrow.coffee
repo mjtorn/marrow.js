@@ -17,9 +17,16 @@ defaultCmds = {
     'sortOrder': 2
 
   'bind':
-    'call':(self, ctxStack, target, args) ->
+    'call':(self, ctxStack, target, args, filters) ->
       key = args[0]
-      target.html(self._findInStack ctxStack, key)
+
+      value = self._findInStack ctxStack, key
+
+      filters? and for filter in filters
+        func = Filters.get filter
+        value = func value
+
+      target.html(value)
 
       return true
     'sortOrder': 2
