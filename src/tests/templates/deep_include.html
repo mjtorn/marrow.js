@@ -49,7 +49,7 @@
 
         <script type="text/javascript">
             fishList = '<li data-bind="fish"></li>';
-            idInclusion = '<span style="color: red;">SET!</span>'
+            idInclusion = '<span style="color: red;" data-bind="dummy.color.name"></span>'
 
             templates = MRW.Templates;
             templates.add('fishlist', fishList);
@@ -67,7 +67,12 @@
                     'link': 'http://www.efukt.com/',
                     'fishes': ['trout', 'flounder', 'bass', 'salmonella'],
                     'klass': 'fishlist',
-                    'combovalue': 'tons of text'
+                    'combovalue': 'tons of text',
+                    'dummy': {
+                        'color': {
+                            'name': 'blue'
+                        }
+                    }
                 }
                 //mrw.loadDom(target);
                 //mrw.renderString(ctx);
