@@ -270,7 +270,13 @@ class Marrow
     cmd = argv[3]
     args = argv[4..-1]
 
-    MRW.Commands.get(cmd).call self, ctx, target, args
+    filters = null
+    if args[args.length-1].indexOf('|') > -1
+      split = args[args.length-1].split '|'
+      args[args.length-1] = split[0]
+      filters = split[1..]
+
+    MRW.Commands.get(cmd).call self, ctx, target, args, filters
 
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
