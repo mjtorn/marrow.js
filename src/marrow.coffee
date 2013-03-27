@@ -1,3 +1,91 @@
+## These need to go in their own file at some point
+defaultCmds = {
+  'attr':
+    'call': (self, ctxStack, target, args) ->
+      # Doing data-attr-class or data-attr-data-href
+      attrName = args[0...-1].join '-'
+
+      not attrName and throw Error 'Missing attribute name'
+
+      key = args[-1...][0]
+
+      value = self._findInStack ctxStack, key
+
+      target.attr(attrName, value)
+
+      return true
+    'sortOrder': 2
+
+  'bind':
+    'call':(self, ctxStack, target, args) ->
+      key = args[0]
+      target.html(self._findInStack ctxStack, key)
+
+      return true
+    'sortOrder': 2
+
+  'include':
+    'call': (self, ctxStack, target, args) ->
+      templateName = args[0]
+
+      target.html(MRW.Templates.get templateName)
+
+      return true
+    'sortOrder': 1
+
+  'foreach':
+    'call': (self, ctxStack, target, args) ->
+      listKey = args[0]
+      key = args[1]
+
+      list = self._findInStack ctxStack, listKey
+
+      # Push our local entry into the context
+      ctxStack.push {}
+      appendableElements = []
+      for entry in list
+        # Update our stack element
+        ctxStack[ctxStack.length - 1][key] = entry
+
+        # Wrap target into Marrow() to make rendering possible
+        mrwTarget = new Marrow(target)
+
+        # XXX: This is why we use jQuery, this didn't work without it
+        childTarget = mrwTarget.tmpl.children(0).clone()
+        rendered = mrwTarget.render ctxStack, $(childTarget)
+
+        appendableElements.push rendered
+
+      # Prevent stack from having old entries
+      ctxStack.pop()
+
+      # Replace the first empty one, then append
+      i = 0
+      for elem in appendableElements
+        if i == 0
+          target.html(elem)
+        else
+          target.append elem
+
+        i++
+
+      return true
+    'sortOrder': 2
+
+  'if':
+    'call': (self, ctxStack, target, args) ->
+      val = self._findInStack ctxStack, args[0]
+      return val?
+    'sortOrder': 2
+
+  'renderif':
+    'call': (self, ctxStack, target, args) ->
+      val = self._findInStack ctxStack, args[0]
+      if not val?
+        target.remove()
+    'sortOrder': 2
+  }
+
 ## This is exported, set everything here
 MRW = {}
 
@@ -6,6 +94,10 @@ escapeStr = (s) ->
 
 unescapeStr = (s) ->
   s.trim().replace('\\n', '\n', 'g')
+
+setupCommands = ->
+  for cmdName, struct of defaultCmds
+    Commands.add cmdName, struct['call'], struct['sortOrder']
 
 class Marrow
   ###
@@ -83,95 +175,6 @@ class Marrow
   # JFDI
   ###
 
-  cmdDict: new ->
-    {
-      'attr':
-        'call': (self, ctxStack, target, args) ->
-          # Doing data-attr-class or data-attr-data-href
-          attrName = args[0...-1].join '-'
-
-          not attrName and throw Error 'Missing attribute name'
-
-          key = args[-1...][0]
-
-          value = self._findInStack ctxStack, key
-
-          target.attr(attrName, value)
-
-          return true
-        'sortOrder': 2
-
-      'bind':
-        'call':(self, ctxStack, target, args) ->
-          key = args[0]
-          target.html(self._findInStack ctxStack, key)
-
-          return true
-        'sortOrder': 2
-
-      'include':
-        'call': (self, ctxStack, target, args) ->
-          templateName = args[0]
-
-          target.html(MRW.Templates.get templateName)
-
-          return true
-        'sortOrder': 1
-
-      'foreach':
-        'call': (self, ctxStack, target, args) ->
-          listKey = args[0]
-          key = args[1]
-
-          list = self._findInStack ctxStack, listKey
-
-          # Push our local entry into the context
-          ctxStack.push {}
-          appendableElements = []
-          for entry in list
-            # Update our stack element
-            ctxStack[ctxStack.length - 1][key] = entry
-
-            # Wrap target into Marrow() to make rendering possible
-            mrwTarget = new Marrow(target)
-
-            # XXX: This is why we use jQuery, this didn't work without it
-            childTarget = mrwTarget.tmpl.children(0).clone()
-            rendered = mrwTarget.render ctxStack, $(childTarget)
-
-            appendableElements.push rendered
-
-          # Prevent stack from having old entries
-          ctxStack.pop()
-
-          # Replace the first empty one, then append
-          i = 0
-          for elem in appendableElements
-            if i == 0
-              target.html(elem)
-            else
-              target.append elem
-
-            i++
-
-          return true
-        'sortOrder': 2
-
-      'if':
-        'call': (self, ctxStack, target, args) ->
-          val = self._findInStack ctxStack, args[0]
-          return val?
-        'sortOrder': 2
-
-      'renderif':
-        'call': (self, ctxStack, target, args) ->
-          val = self._findInStack ctxStack, args[0]
-          if not val?
-            target.remove()
-        'sortOrder': 2
-
-    }
-
   walk: (ctx, target, depth=1) ->
     console.log depth, target
 
@@ -195,11 +198,11 @@ class Marrow
     ###
 
     a1 = @cmdFromAttr a1
-    c1 = @cmdDict[a1]
+    c1 = MRW.Commands.get a1
     not c1? and throw Error('Unknown command "' + a1 + '"')
 
     a2 = @cmdFromAttr a2
-    c2 = @cmdDict[a2]
+    c2 = MRW.Commands.get a2
     not c2? and throw Error('Unknown command "' + a2 + '"')
 
     not c1.sortOrder and throw Error 'Unsortable object ' + c1
@@ -213,6 +216,7 @@ class Marrow
     return -1
 
   render: (ctx, target, depth=1) ->
+    #
     # We want a stack internally for foreach
     if ctx.constructor != Array
       ctx = [ctx]
@@ -226,7 +230,7 @@ class Marrow
       ## order before executing
       attrs = $subTarget.get(0).attributes
       attrs = Array.prototype.slice.call attrs
-      attrs = (a for a in attrs when a.name.search('data-') == 0 and @cmdDict[@cmdFromAttr a])
+      attrs = (a for a in attrs when a.name.search('data-') == 0 and MRW.Commands.get @cmdFromAttr a)
       attrs = attrs.sort @sortCmds
 
       for attr in attrs
@@ -252,7 +256,7 @@ class Marrow
     cmd = argv[3]
     args = argv[4..-1]
 
-    @cmdDict[cmd].call self, ctx, target, args
+    MRW.Commands.get(cmd).call self, ctx, target, args
 
   _findInStack: (ctxStack, key) ->
     for i in [ctxStack.length-1..0] by -1
@@ -267,8 +271,23 @@ Templates =
   get: (name) ->
     @registry[name]
 
+Commands =
+  registry: {}
+  add: (name, func, sortOrder) ->
+    @registry[name] = {
+      'call': func
+      'sortOrder': sortOrder
+    }
+
+  get: (name, func) ->
+    @registry[name]
+
+## Defaults setup
+setupCommands()
+
 ## Export section
 MRW.Marrow = Marrow
+MRW.Commands = Commands
 MRW.Templates = Templates
 
 MRW.escapeStr = escapeStr
