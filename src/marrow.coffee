@@ -22,9 +22,24 @@ defaultCmds = {
 
       value = self._findInStack ctxStack, key
 
+      filterArgClean = (filterArg) =>
+        if filterArg[0] == "'" and filterArg[filterArg.length - 1] == "'"
+          filterArg = filterArg[1...-1]
+          return filterArg
+        return self._findInStack ctxStack, filterArg
+
       filters? and for filter in filters
+        filterArgs = null
+        if filter.indexOf(':') > -1
+          split = filter.split ':'
+          filter = split[0]
+          filterArgs = split[1..]
+
+          filterArgs = filterArgClean fArg for fArg in filterArgs
+
         func = Filters.get filter
-        value = func value
+        not func and throw Error 'Unknown filter ' + filter
+        value = func value, filterArgs
 
       target.html(value)
 
