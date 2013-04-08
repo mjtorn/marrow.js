@@ -39,7 +39,7 @@
 
         <div data-attr-class="klass" data-attr-first-second="combovalue">
             <div data-foreach-fishes="fish">
-                <pre data-bind="fish"></pre>
+                <pre data-bind="fish.name"></pre>
             </div>
         </div>
           <div data-bind="descr_html"></div>
@@ -48,8 +48,8 @@
         </div>
 
         <script type="text/javascript">
-            fishList = '<li data-bind="fish"></li>';
-            idInclusion = '<span style="color: red;" data-bind="dummy.color.name"></span>'
+            fishList = '<li data-bind="fish.name"></li>';
+            idInclusion = '<span data-attr-id="display-|append:dummy.type" style="color: red;" data-bind="dummy.color.name"></span>'
 
             templates = MRW.Templates;
             templates.add('fishlist', fishList);
@@ -65,10 +65,16 @@
                     'descr_html': '<pre>lol</pre>',
                     'outside-text': 'outside',
                     'link': 'http://www.efukt.com/',
-                    'fishes': ['trout', 'flounder', 'bass', 'salmonella'],
+                    'fishes': [
+                        {'name': 'trout'},
+                        {'name': 'flounder'},
+                        {'name': 'bass'},
+                        {'name': 'salmonella'}
+                    ],
                     'klass': 'fishlist',
                     'combovalue': 'tons of text',
                     'dummy': {
+                        'type': 'color',
                         'color': {
                             'name': 'blue'
                         }
