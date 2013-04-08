@@ -28,7 +28,10 @@ defaultCmds = {
 
       value = self._findInStack ctxStack, key
 
-      if keyAttrs
+      ## The context stack magic may lead to value
+      ## being undefined somehow, but not going anywhere
+      ## if it is null seems to work nonetheless.
+      if keyAttrs and value
         for keyAttr in keyAttrs
           value = value[keyAttr]
 
