@@ -196,14 +196,6 @@ class Marrow
     @tmplStr and @parse()
 
   ###
-  # Load a given file from the fs
-  ###
-  loadFile: (tmplPath, enc='utf-8') ->
-    fs = require 'fs'
-
-    @tmplStr = fs.readFileSync tmplPath, enc
-
-  ###
   # Or str
   ###
   loadStr: (@tmplStr) ->
