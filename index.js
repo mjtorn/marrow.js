@@ -1,2 +1,2 @@
-module.exports = require('lib/marrow');
+module.exports = require('./lib/marrow');
 
