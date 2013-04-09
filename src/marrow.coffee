@@ -78,7 +78,7 @@ defaultCmds = {
       # Push our local entry into the context
       ctxStack.push {}
       appendableElements = []
-      for entry in list
+      for entry in list or []
         # Update our stack element
         ctxStack[ctxStack.length - 1][key] = entry
 
