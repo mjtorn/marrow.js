@@ -152,9 +152,12 @@ defaultCmds = {
 
   'renderif':
     'call': (self, ctxStack, target, args) ->
-      val = self._findInStack ctxStack, args[0]
+      key = args[0]
+      val = self._findInStack ctxStack, key
       if not val?
         target.remove()
+        return false
+      true
     'sortOrder': 2
   }
 
