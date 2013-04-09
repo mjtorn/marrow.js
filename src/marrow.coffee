@@ -107,6 +107,43 @@ defaultCmds = {
       return true
     'sortOrder': 2
 
+  'foreachme':
+    'call': (self, ctxStack, target, args) ->
+      listKey = args[0]
+      key = args[1]
+
+      list = self._findInStack ctxStack, listKey
+
+      appendableElements = []
+      for entry in list or []
+        ctxStack.push {}
+        ctxStack[ctxStack.length - 1][key] = entry
+
+        # prevent recursion into recursion into recursion
+        cloneTarget = $(target).clone()
+        cloneTarget.removeAttr 'data-foreachme-' + listKey, null
+
+        mrwTarget = new Marrow(cloneTarget)
+
+        rendered = mrwTarget.render ctxStack, cloneTarget
+
+        appendableElements.push rendered
+
+        ctxStack.pop()
+
+      i = 0
+      for elem in appendableElements
+        if i == 0
+          target.replaceWith elem
+          target = elem
+        else
+          target.after(elem)
+          target = target.next()
+
+        i++
+
+    'sortOrder': 2
+
   'if':
     'call': (self, ctxStack, target, args) ->
       val = self._findInStack ctxStack, args[0]
