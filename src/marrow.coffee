@@ -20,20 +20,7 @@ defaultCmds = {
     'call':(self, ctxStack, target, args, filters) ->
       key = args[0]
 
-      keyAttrs = null
-      if key.indexOf('.') > -1
-        split = key.split '.'
-        key = split[0]
-        keyAttrs = split[1..]
-
       value = self._findInStack ctxStack, key
-
-      ## The context stack magic may lead to value
-      ## being undefined somehow, but not going anywhere
-      ## if it is null seems to work nonetheless.
-      if keyAttrs and value
-        for keyAttr in keyAttrs
-          value = value[keyAttr]
 
       filterArgClean = (filterArg) =>
         if filterArg[0] == "'" and filterArg[filterArg.length - 1] == "'"
@@ -358,10 +345,27 @@ class Marrow
     MRW.Commands.get(cmd).call self, ctx, target, args, filters
 
   _findInStack: (ctxStack, key) ->
+    keyAttrs = null
+    if key.indexOf('.') > -1
+      split = key.split '.'
+      key = split[0]
+      keyAttrs = split[1..]
+
+    # value = self._findInStack ctxStack, key
     for i in [ctxStack.length-1..0] by -1
       ctx = ctxStack[i]
       value = ctx[key]
-      return value if value
+      if value
+        break
+
+    ## The context stack magic may lead to value
+    ## being undefined somehow, but not going anywhere
+    ## if it is null seems to work nonetheless.
+    if keyAttrs and value
+      for keyAttr in keyAttrs
+        value = value[keyAttr]
+
+    return value if value
 
 Templates =
   registry: {}
