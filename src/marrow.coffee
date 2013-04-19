@@ -347,17 +347,17 @@ class Marrow
     for i in [ctxStack.length-1..0] by -1
       ctx = ctxStack[i]
       value = ctx[key]
-      if value
+      if value?
         break
 
     ## The context stack magic may lead to value
     ## being undefined somehow, but not going anywhere
     ## if it is null seems to work nonetheless.
-    if keyAttrs and value
+    if keyAttrs and value?
       for keyAttr in keyAttrs
         value = value[keyAttr]
 
-    return value if value
+    return value if value?
 
 Templates =
   registry: {}
