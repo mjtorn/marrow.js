@@ -165,7 +165,7 @@ defaultFilters = {
 if typeof String.prototype.trim != 'function'
   String.prototype.trim = ->
     this.replace /^\s+|\s+$/g, ''
-  
+
 ## This is exported, set everything here
 MRW = {}
 
@@ -304,8 +304,8 @@ class Marrow
 
       ## Extract all attrs and put them in a sane
       ## order before executing
-      attrs = $subTarget.get(0).attributes
-      attrs = Array.prototype.slice.call attrs
+      attrsBefore = $subTarget.get(0).attributes
+      attrs = (attr for attr in attrsBefore)
 
       attrs = (a for a in attrs when a.name.search('data-') == 0 and MRW.Commands.get @cmdFromAttr a)
       attrs = attrs.sort @sortCmds
