@@ -161,6 +161,11 @@ defaultFilters = {
     s
 }
 
+## IE8 section
+if typeof String.prototype.trim != 'function'
+  String.prototype.trim = ->
+    this.replace /^\s+|\s+$/g, ''
+  
 ## This is exported, set everything here
 MRW = {}
 
