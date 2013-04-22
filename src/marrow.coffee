@@ -325,7 +325,7 @@ class Marrow
     argc = arguments.length
     if argc < 5
       throw Error 'Need command, at least one argument and target element', arguments
-    argv = Array.prototype.slice.call arguments
+    argv = (arg for arg in arguments)
 
     self = argv[0]
     ctx = argv[1]
