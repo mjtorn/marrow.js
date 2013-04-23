@@ -141,7 +141,7 @@ defaultCmds = {
     'call': (self, ctxStack, target, args) ->
       key = args[0]
       val = self._findInStack ctxStack, key
-      if not val?
+      if not val
         target.remove()
         return false
       true
